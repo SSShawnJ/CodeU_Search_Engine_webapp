@@ -1,0 +1,64 @@
+package controller;
+
+import java.util.List;
+import java.util.Map.Entry;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import resources.JedisIndex;
+import resources.SpringConfig;
+import resources.WikiSearch;
+
+
+
+@Controller
+public class IndexPageController {
+	
+	static Jedis jedis;
+
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	   public ModelAndView getSearchWord() {
+	      return new ModelAndView("index", "command", new SearchWord());
+	   }
+	
+	
+	@RequestMapping(value = "/search", method = RequestMethod.POST)
+	public String search(@ModelAttribute("SpringWeb")SearchWord word,ModelMap model) {
+		
+		//System.out.println("Launching Redis sample. Configured with Spring");
+		ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringConfig.class);
+		JedisPool pool = ctx.getBean(JedisPool.class);
+		jedis = pool.getResource();
+		
+		JedisIndex index = new JedisIndex(jedis);
+		
+		
+		WikiSearch searchResult=WikiSearch.search(word.getWord(), index);
+		List<Entry<String,Integer>> pages=searchResult.sort();
+		
+		String x="";
+		for(Entry<String,Integer> entry:pages){
+			x=x+"<p>"+"<a href="+'"'+entry.getKey()+'"'+ ">"+entry.getKey()+"<a>"+":"+entry.getValue()+"</p>";
+		}
+		
+		if(x.equals(""))
+			x="<p>Sorry,result not found</p>";
+			    
+		model.addAttribute("word", x);  
+		
+		return "result";
+	}
+	
+	
+	
+}
+
