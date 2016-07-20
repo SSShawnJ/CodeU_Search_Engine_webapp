@@ -37,8 +37,9 @@
 		</div>
 	</div>
 
- 	<div align="right" style="margin-right: 100px; margin-bottom:30px">&copy; Shawn Jin,
-		CodeU Final Project</div>
+ 	<div align="right" style="margin-top:23%;margin-right:100px;margin-bottom:30px">
+ 		&copy; Shawn Jin, CodeU Final Project
+ 	</div>
 	
 
 

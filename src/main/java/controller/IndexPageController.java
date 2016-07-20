@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,11 +29,11 @@ public class IndexPageController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	   public ModelAndView getSearchWord() {
 	      return new ModelAndView("index", "command", new SearchWord());
-	   }
+	}
 	
 	
 	@RequestMapping(value = "/search", method = RequestMethod.POST)
-	public String search(@ModelAttribute("SpringWeb")SearchWord word,ModelMap model) {
+	public String search(@ModelAttribute SearchWord word,ModelMap model) {
 		
 		//System.out.println("Launching Redis sample. Configured with Spring");
 		ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringConfig.class);
@@ -60,7 +61,8 @@ public class IndexPageController {
 			x.append("<p>Sorry,result not found</p>");
 		
 		//set model attribute
-		model.addAttribute("word", x.toString());  
+		model.addAttribute("word", x.toString());
+		model.addAttribute("searchWord",word.getWord());
 		
 		//return result page to the user
 		return "result";
