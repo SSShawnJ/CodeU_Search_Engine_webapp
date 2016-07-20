@@ -6,12 +6,10 @@ import java.util.Map.Entry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -27,13 +25,18 @@ public class IndexPageController {
 	static Jedis jedis;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	   public ModelAndView getSearchWord() {
-	      return new ModelAndView("index", "command", new SearchWord());
+	   public String getSearchWord() {
+	      return "index";
+	}
+	
+	@RequestMapping(value = "/redirect", method = RequestMethod.GET)
+	   public String getNewSearchWord() {
+	      return "redirect:result";
 	}
 	
 	
 	@RequestMapping(value = "/search", method = RequestMethod.POST)
-	public String search(@ModelAttribute SearchWord word,ModelMap model) {
+	public String search(@RequestParam String word,ModelMap model) {
 		
 		//System.out.println("Launching Redis sample. Configured with Spring");
 		ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringConfig.class);
@@ -45,7 +48,7 @@ public class IndexPageController {
 		JedisIndex index = new JedisIndex(jedis);
 		
 		
-		WikiSearch searchResult=WikiSearch.search(word.getWord(), index);
+		WikiSearch searchResult=WikiSearch.search(word, index);
 		List<Entry<String,Integer>> pages=searchResult.sort();
 		
 		
@@ -62,7 +65,7 @@ public class IndexPageController {
 		
 		//set model attribute
 		model.addAttribute("word", x.toString());
-		model.addAttribute("searchWord",word.getWord());
+		model.addAttribute("searchWord",word);
 		
 		//return result page to the user
 		return "result";

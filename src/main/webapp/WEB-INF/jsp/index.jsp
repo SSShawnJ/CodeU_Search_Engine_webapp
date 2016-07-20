@@ -25,16 +25,19 @@
 	<div class="container" align="center" style="margin-top:15%">
 		<img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" width="272" height="92">
 		
-		<div style="margin:80">
-		<form:form method="POST" action="/search">
-			<table style="margin-top:3%">
+		<div style="margin-top:3%">
+		<form method="POST" action="/search">
+			<table>
 				<tr>
-					<td width="600" height="50" style="padding-right:30"><form:input path="word" class="form-control" autocomplete="on" /></td>
+					<td width="600" height="50" style="padding-right:30">
+					<input  name="word" class="form-control" autocomplete="on" />
+					</td>
 					<td colspan="2" ><input class="btn btn-lg btn-primary btn-block" type="submit" value="Search" /></td>
 				</tr>
-			</table>
-		</form:form>
-		</div>
+			</table>				
+		</form>
+		
+</div>
 	</div>
 
  	<div align="right" style="margin-top:23%;margin-right:100px;margin-bottom:30px">

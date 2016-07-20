@@ -27,27 +27,18 @@
 				width="272" height="92" />
 		</div>
 
-		<div style="margin:80">
-
-<%-- 	<form class="form-control" action="/newsearch" method="post">
-						<input name="newSearch" value="${searchWord}" autocomplete="on" type="text" />
-						<input class="btn btn-lg btn-primary btn-block" type="submit" value="Search" />
-					</form>
-			 --%>
-			 
-			
-			<table style="margin-top:3%">
+		<form method="POST" action="/search" style="margin:50">
+			<table>
 				<tr>
-					<td width="600" height="50" style="padding-right:30"><form:input path="word" value="${searchWord}" class="form-control" autocomplete="on" /></td>
+					<td width="600" height="50" style="padding-right:30">
+					<input  name="word" class="form-control" value="${searchWord}"autocomplete="on" />
+					</td>
 					<td colspan="2" ><input class="btn btn-lg btn-primary btn-block" type="submit" value="Search" /></td>
 				</tr>
-			</table>
-
-			
-
-		</div>
-
-		<div class="col-sm-4" style="margin-left: 24%; margin-right:5%;margin-top:5%">
+			</table>				
+		</form>
+		
+		<div class="col-sm-4" style="margin-left: 18%; margin-right:5%;margin-top:5%">
 			<div class="list-group">
 				<table>
 					<tr>
@@ -58,7 +49,10 @@
 		</div>
 	</div>
 
-	<div align="right" style="margin-right: 100px; margin-bottom:30px">&copy; Shawn Jin,
+		
+
+
+	<div align="right" style="margin-right: 100px; margin-bottom:2%">&copy; Shawn Jin,
 		CodeU Final Project</div>
 
 
