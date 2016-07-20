@@ -39,22 +39,30 @@ public class IndexPageController {
 		JedisPool pool = ctx.getBean(JedisPool.class);
 		jedis = pool.getResource();
 		
+
+		
 		JedisIndex index = new JedisIndex(jedis);
 		
 		
 		WikiSearch searchResult=WikiSearch.search(word.getWord(), index);
 		List<Entry<String,Integer>> pages=searchResult.sort();
 		
-		String x="";
+		
+		//build html elements and return to the View
+		StringBuilder x=new StringBuilder();
 		for(Entry<String,Integer> entry:pages){
-			x=x+"<p>"+"<a href="+'"'+entry.getKey()+'"'+ ">"+entry.getKey()+"<a>"+":"+entry.getValue()+"</p>";
+			x.append("<a href="+'"'+entry.getKey()+'"'+"class="+'"'+"list-group-item"+'"'+" >"+
+		"<h4 class="+'"'+"list-group-item-heading"+'"'+" >"+entry.getKey()+"</h4>"+
+		"<p class="+'"'+"list-group-item-text"+'"'+" >"+entry.getValue()+"</p> "+"</a>");
 		}
 		
 		if(x.equals(""))
-			x="<p>Sorry,result not found</p>";
-			    
-		model.addAttribute("word", x);  
+			x.append("<p>Sorry,result not found</p>");
 		
+		//set model attribute
+		model.addAttribute("word", x.toString());  
+		
+		//return result page to the user
 		return "result";
 	}
 	
