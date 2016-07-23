@@ -51,20 +51,20 @@ public class WebCrawler {
 	 * @return Number of pages indexed.
 	 * @throws IOException
 	 */
-	public String crawl() throws IOException {
+	public void crawl() throws IOException {
 		if (queue.isEmpty()) {
-	            return null;
+	            return;
 	        }
 		
 		String url=queue.poll();
      	if(index.isIndexed(url)){
-     		return null;
+     		return;
      	}
      	else{
      		Elements paragraphs=wf.fetchWikipedia(url);
      		index.indexPage(url,paragraphs);
      		queueInternalLinks(paragraphs);
-     		return url;
+     		return;
      	}
         
         	

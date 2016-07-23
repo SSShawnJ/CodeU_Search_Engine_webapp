@@ -24,7 +24,7 @@ public class WikiFetcher {
 	 * @throws IOException
 	 */
 	public Elements fetchWikipedia(String url) throws IOException {
-		sleepIfNeeded();
+		//sleepIfNeeded();
 
 		// download and parse the document
 		Connection conn = Jsoup.connect(url);
@@ -62,23 +62,23 @@ public class WikiFetcher {
 		return paras;
 	}
 
-	/**
-	 * Rate limits by waiting at least the minimum interval between requests.
-	 */
-	private void sleepIfNeeded() {
-		if (lastRequestTime != -1) {
-			long currentTime = System.currentTimeMillis();
-			long nextRequestTime = lastRequestTime + minInterval;
-			if (currentTime < nextRequestTime) {
-				try {
-					//System.out.println("Sleeping until " + nextRequestTime);
-					Thread.sleep(nextRequestTime - currentTime);
-				} catch (InterruptedException e) {
-					System.err.println("Warning: sleep interrupted in fetchWikipedia.");
-				}
-			}
-		}
-		lastRequestTime = System.currentTimeMillis();
-	}
+//	/**
+//	 * Rate limits by waiting at least the minimum interval between requests.
+//	 */
+//	private void sleepIfNeeded() {
+//		if (lastRequestTime != -1) {
+//			long currentTime = System.currentTimeMillis();
+//			long nextRequestTime = lastRequestTime + minInterval;
+//			if (currentTime < nextRequestTime) {
+//				try {
+//					//System.out.println("Sleeping until " + nextRequestTime);
+//					Thread.sleep(nextRequestTime - currentTime);
+//				} catch (InterruptedException e) {
+//					System.err.println("Warning: sleep interrupted in fetchWikipedia.");
+//				}
+//			}
+//		}
+//		lastRequestTime = System.currentTimeMillis();
+//	}
 }
 
