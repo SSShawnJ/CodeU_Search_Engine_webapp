@@ -1,6 +1,5 @@
 package controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -8,6 +7,8 @@ import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 
@@ -30,6 +33,9 @@ import resources.WikiSearch;
 
 @Controller
 public class IndexPageController {
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(IndexPageController.class);
 	
 	static Jedis jedis;
 
@@ -83,22 +89,27 @@ public class IndexPageController {
 	
 	
 	@RequestMapping(value = "/searchImage", method = RequestMethod.GET)
-	   public String imageSearch(Model model) {
+	   public String imageSearch() {
 	      return "imageSearch";
 	}
 	
-	@RequestMapping(value = "/searchImage", method = RequestMethod.POST)
-	public String searchForImage(@RequestParam File imagefile,ModelMap model) throws IOException, GeneralSecurityException {
-		Path imagePath = Paths.get(imagefile.toURI());
+	@RequestMapping(value = "/imageSearchResult", method = RequestMethod.POST)
+	public String searchForImage(@RequestParam MultipartFile imagefile,ModelMap model) throws IOException, GeneralSecurityException {
+
 		
 		DetectLandmark app = new DetectLandmark(DetectLandmark.getVisionService());
-		    List<EntityAnnotation> landmarks = app.identifyLandmark(imagePath);
+		    List<EntityAnnotation> landmarks = app.identifyLandmark(imagefile);
 		    String x="";
 		    for (EntityAnnotation annotation : landmarks) {
 		     x+=annotation.getDescription();
 		    }  
-		model.addAttribute("path", x);
+		model.addAttribute("location", x);
 		return "imageSearchResult";
+	}
+	
+	@RequestMapping(value = "/imageSearchResult", method = RequestMethod.GET)
+	   public String imageSearchResult() {
+	      return "imageSearchResult";
 	}
 }
 

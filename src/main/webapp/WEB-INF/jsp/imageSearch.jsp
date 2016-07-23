@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,9 +46,9 @@ function readURL(input) {
 		</a>
 
 		<div>
-			<form  method="POST" action="/searchImage">
+			<form  method="POST" action="/imageSearchResult" enctype="multipart/form-data">
 				<p>
-					Please specify an image:<br> 
+					<h3>Please specify an image:<br></h3>
 					<input type="file" name="imagefile" accept="image/jpg, image/jpeg, image/png" onchange="readURL(this);">
 					<img id="blah" src="" alt="your image" />
 				</p>
