@@ -10,6 +10,8 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Protocol;
 
+//Config redis in Spring MVC
+
 @Configuration
 public class SpringConfig {
 

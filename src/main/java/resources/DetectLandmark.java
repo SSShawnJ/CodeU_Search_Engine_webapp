@@ -66,7 +66,7 @@ public class DetectLandmark {
 
   // [START run_application]
   /**
-   * Annotates an image using the Vision API.
+   * Annotates an image using the Vision API. Unit testing
    */
   public static void main(String[] args) throws IOException, GeneralSecurityException {
 	  if (args.length != 1) {
@@ -115,6 +115,46 @@ public class DetectLandmark {
     this.vision = vision;
   }
 
+  
+  /**
+   * Gets up to {@code maxResults} landmarks for an image uploaded from jsp.
+   */
+  public List<EntityAnnotation> identifyLandmark(MultipartFile imagefile) throws IOException {
+	  byte[] data = imagefile.getBytes();
+
+	    AnnotateImageRequest request =
+	        new AnnotateImageRequest()
+	            .setImage(new Image().encodeContent(data))
+	            .setFeatures(ImmutableList.of(
+	                new Feature()
+	                    .setType("LANDMARK_DETECTION")
+	                    .setMaxResults(MAX_RESULTS)));
+	    Vision.Images.Annotate annotate =
+	        vision.images()
+	            .annotate(new BatchAnnotateImagesRequest().setRequests(ImmutableList.of(request)));
+	    // Due to a bug: requests to Vision API containing large images fail when GZipped.
+	    // annotate.setDisableGZipContent(true);
+	    // [END construct_request]
+
+	    // [START parse_response]
+	    BatchAnnotateImagesResponse batchResponse = annotate.execute();
+	    assert batchResponse.getResponses().size() == 1;
+	    AnnotateImageResponse response = batchResponse.getResponses().get(0);
+	    if (response.getLandmarkAnnotations() == null) {
+	      throw new IOException(
+	          response.getError() != null
+	              ? response.getError().getMessage()
+	              : "Unknown error getting image annotations");
+	    }
+	    return response.getLandmarkAnnotations();
+	  
+	  
+	 
+  }
+  
+  
+  ///////////test use////////////////
+  
   /**
    * Gets up to {@code maxResults} landmarks for an image stored at local machine.
    */
@@ -179,42 +219,6 @@ public class DetectLandmark {
     return response.getLandmarkAnnotations();
   }
   
-  
-  /**
-   * Gets up to {@code maxResults} landmarks for an image uploaded from jsp.
-   */
-  public List<EntityAnnotation> identifyLandmark(MultipartFile imagefile) throws IOException {
-	  byte[] data = imagefile.getBytes();
-
-	    AnnotateImageRequest request =
-	        new AnnotateImageRequest()
-	            .setImage(new Image().encodeContent(data))
-	            .setFeatures(ImmutableList.of(
-	                new Feature()
-	                    .setType("LANDMARK_DETECTION")
-	                    .setMaxResults(MAX_RESULTS)));
-	    Vision.Images.Annotate annotate =
-	        vision.images()
-	            .annotate(new BatchAnnotateImagesRequest().setRequests(ImmutableList.of(request)));
-	    // Due to a bug: requests to Vision API containing large images fail when GZipped.
-	    // annotate.setDisableGZipContent(true);
-	    // [END construct_request]
-
-	    // [START parse_response]
-	    BatchAnnotateImagesResponse batchResponse = annotate.execute();
-	    assert batchResponse.getResponses().size() == 1;
-	    AnnotateImageResponse response = batchResponse.getResponses().get(0);
-	    if (response.getLandmarkAnnotations() == null) {
-	      throw new IOException(
-	          response.getError() != null
-	              ? response.getError().getMessage()
-	              : "Unknown error getting image annotations");
-	    }
-	    return response.getLandmarkAnnotations();
-	  
-	  
-	 
-  }
   
   // [END detect_gcs_object]
 }

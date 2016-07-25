@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,22 +21,20 @@
 </head>
 <body>
 
-<script type="text/javascript">
-function readURL(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
+	<script type="text/javascript">
+		function readURL(input) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
 
-        reader.onload = function (e) {
-            $('#blah')
-                .attr('src', e.target.result)
-                .width(320)
-                .height(240);
-        };
+				reader.onload = function(e) {
+					$('#blah').attr('src', e.target.result).width(320).height(
+							240);
+				};
 
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-</script>
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
+	</script>
 
 
 	<div class="container" align="center" style="margin-top: 15%">
@@ -46,12 +44,15 @@ function readURL(input) {
 		</a>
 
 		<div>
-			<form  method="POST" action="/imageSearchResult" enctype="multipart/form-data">
-				<p>
-					<h3>Please specify an image:<br></h3>
-					<input type="file" name="imagefile" accept="image/jpg, image/jpeg, image/png" onchange="readURL(this);">
-					<img id="blah" src="" alt="your image" />
-				</p>
+			<form method="POST" action="/imageSearchResult"
+				enctype="multipart/form-data">
+				<h3>
+					Please specify an image:<br>
+				</h3>
+				<input type="file" name="imagefile"
+					accept="image/jpg, image/jpeg, image/png" onchange="readURL(this);" />
+				<img id="blah" src="" alt="your image" />
+			
 				<div>
 					<input type="submit" value="Send">
 				</div>

@@ -113,9 +113,9 @@ public class WebCrawler {
             
 		} while (!wc.queue.isEmpty());
 		
-		System.out.println(wc.queueSize());
-		
-		System.out.println(index.urlSetKeys().size());
-		System.out.println(index.urlSetKeys());
+//		System.out.println(wc.queueSize());
+//		
+//		System.out.println(index.urlSetKeys().size());
+//		System.out.println(index.urlSetKeys());
 	}
 }

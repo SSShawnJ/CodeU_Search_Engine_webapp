@@ -106,7 +106,7 @@ public class JedisIndex {
 				Map<String, Integer> map = new HashMap<String, Integer>();
 				int i = 0;
 				for (String url: urls) {
-					System.out.println(url);
+					//System.out.println(url);
 					Integer count = new Integer((String) res.get(i++));
 					map.put(url, count);
 				}
