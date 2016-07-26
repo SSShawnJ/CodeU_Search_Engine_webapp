@@ -62,15 +62,11 @@ public class WikiSearch {
 	 * @return New WikiSearch object.
 	 */
 	public WikiSearch or(WikiSearch that) {
-		Map<String,Integer> orMap=new HashMap<String,Integer>();
-		for(String thisKey:this.map.keySet()){
-			orMap.put(thisKey,this.getRelevance(thisKey));
-		}
+		Map<String,Integer> orMap=new HashMap<String,Integer>(this.map);
 		
 		for(String thatKey:that.map.keySet()){
 			if(orMap.containsKey(thatKey)){
 				int newRelavance=orMap.get(thatKey)+that.getRelevance(thatKey);
-				orMap.remove(thatKey);
 				orMap.put(thatKey,newRelavance);
 			}
 			else{
