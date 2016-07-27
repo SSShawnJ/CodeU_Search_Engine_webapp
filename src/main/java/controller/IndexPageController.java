@@ -58,8 +58,11 @@ public class IndexPageController {
 		if(searchResult!=null){
 			pages=searchResult.sort();
 			for(Entry<String,Double> entry:pages){
-				x.append("<a href="+'"'+entry.getKey()+'"'+"class="+'"'+"list-group-item"+'"'+" >"+
-			"<h4 class="+'"'+"list-group-item-heading"+'"'+" >"+entry.getKey()+"</h4>"+
+				String url=entry.getKey();
+				String title=url.substring(url.lastIndexOf('/')+1, url.length()).replace('_', ' ');
+				x.append("<a href="+'"'+url+'"'+"class="+'"'+"list-group-item"+'"'+" >"+
+			"<h4 class="+'"'+"list-group-item-heading"+'"'+" >"+title+"</h4>"+
+			"<p class="+'"'+"list-group-item-text"+'"'+" >"+url+"</p> " +
 			"<p class="+'"'+"list-group-item-text"+'"'+" >"+entry.getValue()+"</p> "+"</a>");
 			}
 			

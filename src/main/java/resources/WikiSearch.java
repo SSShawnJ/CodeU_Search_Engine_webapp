@@ -171,7 +171,7 @@ public class WikiSearch {
 	 */
 	public static WikiSearch search(String term, JedisIndex index) {
 		if(!term.equals("")){
-			String[] termArray=term.split(" ");
+			String[] termArray=term.trim().split(" ");
 			
 			//checking search term is not empty	
 			Map<String,Double> map=new HashMap<>();

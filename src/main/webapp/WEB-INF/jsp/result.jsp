@@ -37,6 +37,9 @@
 					<td colspan="2"><input
 						class="btn btn-lg btn-primary btn-block" type="submit"
 						value="Search" /></td>
+					<td colspan="2">
+						<input class="btn btn-lg btn-primary btn-block" type="button"  onclick="location.href='/searchImage'" value="Search Image" >	
+					</td>
 				</tr>
 			</table>
 		</form>
