@@ -22,6 +22,8 @@ import redis.clients.jedis.Transaction;
 public class JedisIndex {
 
 	private Jedis jedis;
+	//total number of documents in the corpus 
+	private int N;
 
 	/**
 	 * Constructor.
@@ -30,6 +32,7 @@ public class JedisIndex {
 	 */
 	public JedisIndex(Jedis jedis) {
 		this.jedis = jedis;
+		this.setN(urlSetKeys().size());
 	}
 	
 	/**
@@ -317,5 +320,13 @@ public class JedisIndex {
 		url = "https://en.wikipedia.org/wiki/Programming_language";
 		paragraphs = wf.readWikipedia(url);
 		index.indexPage(url, paragraphs);
+	}
+
+	public int getN() {
+		return N;
+	}
+
+	public void setN(int n) {
+		N = n;
 	}
 }
