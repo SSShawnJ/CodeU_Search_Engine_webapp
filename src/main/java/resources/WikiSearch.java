@@ -21,14 +21,14 @@ import redis.clients.jedis.Jedis;
 public class WikiSearch {
 	
 	// map from URLs that contain the term(s) to relevance score
-	private Map<String, Integer> map;
+	private Map<String, Double> map;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param map
 	 */
-	public WikiSearch(Map<String, Integer> map) {
+	public WikiSearch(Map<String, Double> map) {
 		this.map = map;
 	}
 	
@@ -38,8 +38,8 @@ public class WikiSearch {
 	 * @param url
 	 * @return
 	 */
-	public Integer getRelevance(String url) {
-		Integer relevance = map.get(url);
+	public Double getRelevance(String url) {
+		Double relevance = map.get(url);
 		return relevance==null ? 0: relevance;
 	}
 	
@@ -49,8 +49,8 @@ public class WikiSearch {
 	 * @param map
 	 */
 	private  void print() {
-		List<Entry<String, Integer>> entries = sort();
-		for (Entry<String, Integer> entry: entries) {
+		List<Entry<String, Double>> entries = sort();
+		for (Entry<String, Double> entry: entries) {
 			System.out.println(entry);
 		}
 	}
@@ -62,11 +62,11 @@ public class WikiSearch {
 	 * @return New WikiSearch object.
 	 */
 	public WikiSearch or(WikiSearch that) {
-		Map<String,Integer> orMap=new HashMap<String,Integer>(this.map);
+		Map<String,Double> orMap=new HashMap<String,Double>(this.map);
 		
 		for(String thatKey:that.map.keySet()){
 			if(orMap.containsKey(thatKey)){
-				int newRelavance=orMap.get(thatKey)+that.getRelevance(thatKey);
+				double newRelavance=orMap.get(thatKey)+that.getRelevance(thatKey);
 				orMap.put(thatKey,newRelavance);
 			}
 			else{
@@ -83,11 +83,11 @@ public class WikiSearch {
 	 * @return New WikiSearch object.
 	 */
 	public WikiSearch and(WikiSearch that) {
-        Map<String,Integer> andMap=new HashMap<>();
+        Map<String,Double> andMap=new HashMap<>();
         Set<String> keySet=this.map.size()>that.map.size()?that.map.keySet():this.map.keySet();
         for(String key:keySet){
-        	int thisR=this.getRelevance(key);
-        	int thatR=that.getRelevance(key);
+        	double thisR=this.getRelevance(key);
+        	double thatR=that.getRelevance(key);
         	if(thisR!=0 && thatR!=0){
         		andMap.put(key, thisR+thatR);
         	}
@@ -102,7 +102,7 @@ public class WikiSearch {
 	 * @return New WikiSearch object.
 	 */
 	public WikiSearch minus(WikiSearch that) {
-        Map<String,Integer> minusMap=new HashMap<>();
+        Map<String,Double> minusMap=new HashMap<>();
         for(String key:this.map.keySet()){
         	if(!that.map.containsKey(key)){
         		minusMap.put(key, this.getRelevance(key));
@@ -118,7 +118,7 @@ public class WikiSearch {
 	 * @param rel2: relevance score for the second search
 	 * @return
 	 */
-	protected int totalRelevance(Integer rel1, Integer rel2) {
+	protected double totalRelevance(Double rel1, Double rel2) {
 		// simple starting place: relevance is the sum of the term frequencies.
 		return rel1 + rel2;
 	}
@@ -128,35 +128,84 @@ public class WikiSearch {
 	 * 
 	 * @return List of entries with URL and relevance.
 	 */
-	public List<Entry<String, Integer>> sort() {
-        Comparator<Entry<String,Integer>> comparator=new Comparator<Entry<String,Integer>>(){
+	public List<Entry<String, Double>> sort() {
+        Comparator<Entry<String,Double>> comparator=new Comparator<Entry<String,Double>>(){
 
 			@Override
-			public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
+			public int compare(Entry<String, Double> o1, Entry<String, Double> o2) {
 				if(o1.getValue()>o2.getValue()) return -1;
 				else if(o1.getValue()<o2.getValue()) return 1;
 				else return 0;
 			}	
         };
         
-        List<Entry<String,Integer>> list=new ArrayList<>();
+        List<Entry<String,Double>> list=new ArrayList<>();
         list.addAll(this.map.entrySet());
         Collections.sort(list, comparator);
 		return list;
 	}
 
+	
+	//Basic version of TF-IDF algorithm
+	
+	//Term Frequency function
+		//termCount: the number of times that term t occurs in document
+		private static double TF(int termCount){
+			return 1+Math.log10(termCount);
+		}
+
+		//Inverse Document Frequency function
+		//N: total number of documents in the corpus 
+		//d: number of documents where the term appears
+		private static double IDF(int N,int d){
+			return Math.log10(1.0+N*1.0/d);
+		}
+	
 	/**
 	 * Performs a search and makes a WikiSearch object.
+	 * Implements TF-IDF ranking algorithm 
 	 * 
 	 * @param term
 	 * @param index
 	 * @return
 	 */
 	public static WikiSearch search(String term, JedisIndex index) {
-		Map<String, Integer> map = index.getCounts(term);
+		String[] termArray=term.split(" ");
+		Map<String,Double> map=new HashMap<>();
+		
+		//get total number of documents in the corpus 
+		int N=index.getN();
+		
+		//iterate through search term one by one and calculate tf-idf relevance	
+		for (int i = 0; i < termArray.length; i++) {
+			String t=termArray[i];
+			//get the mapping from urls to termCount for this particular term
+			Map<String, Integer> termMap = index.getCounts(t);
+			//get number of documents where the term appears
+			int d=index.getURLs(t).size();
+			
+			for(String url:termMap.keySet()){
+				int termCount=termMap.get(url);
+				//calculate tf-idf relevance value
+				double relevance=TF(termCount)*IDF(N,d);
+				
+				//add calculated relevance to the result map
+				if(map.containsKey(url)){
+					double newRelevance=map.get(url)+relevance;
+					map.put(url, newRelevance);
+				}
+				else{
+					map.put(url, relevance);
+				}
+			}
+			
+		}	
+		
 		return new WikiSearch(map);
 	}
 
+	
+	
 	public static void main(String[] args) throws IOException {
 		
 		// make a JedisIndex

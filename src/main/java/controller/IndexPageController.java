@@ -49,12 +49,12 @@ public class IndexPageController {
 		
 		//search
 		WikiSearch searchResult=WikiSearch.search(word, index);
-		List<Entry<String,Integer>> pages=searchResult.sort();
+		List<Entry<String,Double>> pages=searchResult.sort();
 		
 		
 		//build html elements and return to View
 		StringBuilder x=new StringBuilder();
-		for(Entry<String,Integer> entry:pages){
+		for(Entry<String,Double> entry:pages){
 			x.append("<a href="+'"'+entry.getKey()+'"'+"class="+'"'+"list-group-item"+'"'+" >"+
 		"<h4 class="+'"'+"list-group-item-heading"+'"'+" >"+entry.getKey()+"</h4>"+
 		"<p class="+'"'+"list-group-item-text"+'"'+" >"+entry.getValue()+"</p> "+"</a>");
@@ -62,12 +62,12 @@ public class IndexPageController {
 		
 		//return suggestions if no result is found
 		if(x.length()==0){
-			x.append("<a><h4 class="+'"'+"list-group-item-heading"+'"'+">"+"Sorry, your search - "+word+" - does not match any documents.</h4>"+
+			x.append("<h4 class="+'"'+"list-group-item-heading"+'"'+">"+"Sorry, your search - "+word+" - does not match any documents.</h4>"+
 					"<p class="+'"'+"list-group-item-text"+'"'+" >"+"Suggestions:"+"</p> "
 					+"<p class="+'"'+"list-group-item-text"+'"'+" >"+"Make sure all words are spelled correctly."+"</p> "
 					+"<p class="+'"'+"list-group-item-text"+'"'+" >"+"Try different keywords."+"</p> "
 					+"<p class="+'"'+"list-group-item-text"+'"'+" >"+"Try more general keywords."+"</p> "
-					+"<p class="+'"'+"list-group-item-text"+'"'+" >"+"Try fewer keywords."+"</p></a> ");
+					+"<p class="+'"'+"list-group-item-text"+'"'+" >"+"Try fewer keywords."+"</p> ");
 		}
 		
 		
