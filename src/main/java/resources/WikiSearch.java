@@ -167,41 +167,48 @@ public class WikiSearch {
 	 * 
 	 * @param term
 	 * @param index
-	 * @return
+	 * @return a url map associated with tf-idf relevance value; or null if search term is empty
 	 */
 	public static WikiSearch search(String term, JedisIndex index) {
-		String[] termArray=term.split(" ");
-		Map<String,Double> map=new HashMap<>();
-		
-		//get total number of documents in the corpus 
-		int N=index.getN();
-		
-		//iterate through search term one by one and calculate tf-idf relevance	
-		for (int i = 0; i < termArray.length; i++) {
-			String t=termArray[i];
-			//get the mapping from urls to termCount for this particular term
-			Map<String, Integer> termMap = index.getCounts(t);
-			//get number of documents where the term appears
-			int d=index.getURLs(t).size();
+		if(!term.equals("")){
+			String[] termArray=term.split(" ");
 			
-			for(String url:termMap.keySet()){
-				int termCount=termMap.get(url);
-				//calculate tf-idf relevance value
-				double relevance=TF(termCount)*IDF(N,d);
+			//checking search term is not empty	
+			Map<String,Double> map=new HashMap<>();
+			
+			//get total number of documents in the corpus 
+			int N=index.getN();
+			
+			//iterate through search term one by one and calculate tf-idf relevance	
+			for (int i = 0; i < termArray.length; i++) {
+				String t=termArray[i];
+				//get the mapping from urls to termCount for this particular term
+				Map<String, Integer> termMap = index.getCounts(t);
+				//get number of documents where the term appears
+				int d=index.getURLs(t).size();
 				
-				//add calculated relevance to the result map
-				if(map.containsKey(url)){
-					double newRelevance=map.get(url)+relevance;
-					map.put(url, newRelevance);
+				for(String url:termMap.keySet()){
+					int termCount=termMap.get(url);
+					//calculate tf-idf relevance value
+					double relevance=TF(termCount)*IDF(N,d);
+					
+					//add calculated relevance to the result map
+					if(map.containsKey(url)){
+						double newRelevance=map.get(url)+relevance;
+						map.put(url, newRelevance);
+					}
+					else{
+						map.put(url, relevance);
+					}
 				}
-				else{
-					map.put(url, relevance);
-				}
-			}
-			
-		}	
+				
+			}	
+			return new WikiSearch(map);
 		
-		return new WikiSearch(map);
+		}
+		//search term is empty,return null
+		else
+			return null;
 	}
 
 	

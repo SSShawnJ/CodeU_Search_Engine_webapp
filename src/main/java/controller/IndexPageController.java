@@ -49,26 +49,30 @@ public class IndexPageController {
 		
 		//search
 		WikiSearch searchResult=WikiSearch.search(word, index);
-		List<Entry<String,Double>> pages=searchResult.sort();
-		
-		
 		//build html elements and return to View
-		StringBuilder x=new StringBuilder();
-		for(Entry<String,Double> entry:pages){
-			x.append("<a href="+'"'+entry.getKey()+'"'+"class="+'"'+"list-group-item"+'"'+" >"+
-		"<h4 class="+'"'+"list-group-item-heading"+'"'+" >"+entry.getKey()+"</h4>"+
-		"<p class="+'"'+"list-group-item-text"+'"'+" >"+entry.getValue()+"</p> "+"</a>");
-		}
+				StringBuilder x=new StringBuilder();
 		
-		//return suggestions if no result is found
-		if(x.length()==0){
-			x.append("<h4 class="+'"'+"list-group-item-heading"+'"'+">"+"Sorry, your search - "+word+" - does not match any documents.</h4>"+
-					"<p class="+'"'+"list-group-item-text"+'"'+" >"+"Suggestions:"+"</p> "
-					+"<p class="+'"'+"list-group-item-text"+'"'+" >"+"Make sure all words are spelled correctly."+"</p> "
-					+"<p class="+'"'+"list-group-item-text"+'"'+" >"+"Try different keywords."+"</p> "
-					+"<p class="+'"'+"list-group-item-text"+'"'+" >"+"Try more general keywords."+"</p> "
-					+"<p class="+'"'+"list-group-item-text"+'"'+" >"+"Try fewer keywords."+"</p> ");
+		List<Entry<String,Double>> pages;
+		
+		//if the user's query is not empty
+		if(searchResult!=null){
+			pages=searchResult.sort();
+			for(Entry<String,Double> entry:pages){
+				x.append("<a href="+'"'+entry.getKey()+'"'+"class="+'"'+"list-group-item"+'"'+" >"+
+			"<h4 class="+'"'+"list-group-item-heading"+'"'+" >"+entry.getKey()+"</h4>"+
+			"<p class="+'"'+"list-group-item-text"+'"'+" >"+entry.getValue()+"</p> "+"</a>");
+			}
+			
+			//return suggestions if no result is found
+			if(x.length()==0){
+				x.append(suggestions(word));
+			}
 		}
+		else{
+			x.append(suggestions(word));
+		}	
+		
+		
 		
 		
 		//set model attribute
@@ -79,7 +83,14 @@ public class IndexPageController {
 		return "result";
 	}
 	
-	
+	private static String suggestions(String word){
+		return "<h4 class="+'"'+"list-group-item-heading"+'"'+">"+"Sorry, your search - "+word+" - does not match any documents.</h4>"+
+				"<p class="+'"'+"list-group-item-text"+'"'+" >"+"Suggestions:"+"</p> "
+				+"<p class="+'"'+"list-group-item-text"+'"'+" >"+"Make sure all words are spelled correctly."+"</p> "
+				+"<p class="+'"'+"list-group-item-text"+'"'+" >"+"Try different keywords."+"</p> "
+				+"<p class="+'"'+"list-group-item-text"+'"'+" >"+"Try more general keywords."+"</p> "
+				+"<p class="+'"'+"list-group-item-text"+'"'+" >"+"Try fewer keywords."+"</p> ";
+	}
 	
 }
 
