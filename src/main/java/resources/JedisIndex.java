@@ -21,7 +21,11 @@ import redis.clients.jedis.Transaction;
  */
 public class JedisIndex {
 
+	
+	private static final String PageWordsKey="PageWords";
+	
 	private Jedis jedis;
+	
 	//total number of documents in the corpus 
 	private int N;
 
@@ -33,6 +37,22 @@ public class JedisIndex {
 	public JedisIndex(Jedis jedis) {
 		this.jedis = jedis;
 		this.setN(urlSetKeys().size());
+	}
+	
+	/**
+	 * get number of documents in the corpus
+	 * @return int value
+	 */
+	public int getN() {
+		return N;
+	}
+
+	/**
+	 * set number of documents in the corpus
+	 * @return 
+	 */
+	public void setN(int n) {
+		N = n;
 	}
 	
 	/**
@@ -51,6 +71,15 @@ public class JedisIndex {
 	 */
 	private String termCounterKey(String url) {
 		return "TermCounter:" + url;
+	}
+	
+	/**
+	 * Returns the Redis key for a URL's total words count.
+	 * 
+	 * @return Redis key.
+	 */
+	private String pageWordsKey(String url) {
+		return "PageWords:" + url;
 	}
 
 	/**
@@ -84,7 +113,35 @@ public class JedisIndex {
 		Set<String> set = jedis.smembers(urlSetKey(term));
 		return set;
 	}
+	
+	/**
+	 * Looks up a url and returns total number of words in this url document.
+	 * 
+	 * @param url
+	 * @return Integer of number of words in this document.
+	 */
+	public Integer getWordsCount(String url) {
+		String redisKey=pageWordsKey(url);
+		String count = jedis.hget(PageWordsKey, redisKey);
+		return new Integer(count);
+	}
 
+	/**
+	 * returns average words count in all documents
+	 * 
+	 * @return double avg
+	 */
+	public double getAvgWordsCount(){
+		Map<String,String> map=jedis.hgetAll(PageWordsKey);
+		int length=map.size();
+		Double avg=0.0;
+		for(Entry<String,String> entry:map.entrySet()){
+			avg+=Double.parseDouble(entry.getValue())/length;
+		}
+		return avg;
+	}
+	
+	
 	/**
 	 * Looks up a term and returns a map from URL to count.
 	 * 
@@ -169,6 +226,7 @@ public class JedisIndex {
 		for (String term: tc.keySet()) {
 			Integer count = tc.get(term);
 			t.hset(hashname, term, count.toString());
+			t.hset(PageWordsKey, pageWordsKey(url), Integer.toString(tc.getTotalTerms()));
 			t.sadd(urlSetKey(term), url);
 		}
 		List<Object> res = t.exec();
@@ -236,6 +294,17 @@ public class JedisIndex {
 	public Set<String> termCounterKeys() {
 		return jedis.keys("TermCounter:*");
 	}
+	
+	/**
+	 * Returns pageWordsCounter keys for the URLS that have been indexed.
+	 * 
+	 * Should be used for development and testing, not production.
+	 * 
+	 * @return
+	 */
+	public Set<String> pageWordsCounterKeys() {
+		return jedis.keys("PageWords:*");
+	}
 
 	/**
 	 * Deletes all URLSet objects from the database.
@@ -262,6 +331,22 @@ public class JedisIndex {
 	 */
 	public void deleteTermCounters() {
 		Set<String> keys = termCounterKeys();
+		Transaction t = jedis.multi();
+		for (String key: keys) {
+			t.del(key);
+		}
+		t.exec();
+	}
+	
+	/**
+	 * Deletes all pageWords objects from the database.
+	 * 
+	 * Should be used for development and testing, not production.
+	 * 
+	 * @return
+	 */
+	public void deletePageWordsCounters() {
+		Set<String> keys = pageWordsCounterKeys();
 		Transaction t = jedis.multi();
 		for (String key: keys) {
 			t.del(key);
@@ -295,6 +380,7 @@ public class JedisIndex {
 		
 //		index.deleteTermCounters();
 //		index.deleteURLSets();
+//		index.deletePageWordsCounters();
 //		index.deleteAllKeys();
 		loadIndex(index);
 		
@@ -322,11 +408,5 @@ public class JedisIndex {
 		index.indexPage(url, paragraphs);
 	}
 
-	public int getN() {
-		return N;
-	}
-
-	public void setN(int n) {
-		N = n;
-	}
+	
 }
