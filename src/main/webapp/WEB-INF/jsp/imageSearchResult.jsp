@@ -46,7 +46,7 @@
 		<table>
 		<tr>
 			<td class="list-group-item-heading" align="left">Search result:</td>
-			<td class="list-group-item-text" align="left">${location}</td>
+			<td class="list-group-item-text" align="left">${annotation}</td>
 		</tr>
 	</table>
 	</div>
