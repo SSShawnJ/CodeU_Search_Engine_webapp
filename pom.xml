@@ -30,7 +30,7 @@
               <artifactItem>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-runner</artifactId>
-                <version>9.3.3.v20150827</version>
+                <version>9.1.3.v20140225</version>
                 <destFileName>jetty-runner.jar</destFileName>
               </artifactItem>
             </artifactItems>
