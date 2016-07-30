@@ -21,10 +21,12 @@ public class TermCounter {
 	
 	private Map<String, Integer> map;
 	private String label;
+	private int totalTerms;
 	
 	public TermCounter(String label) {
 		this.label = label;
 		this.map = new HashMap<String, Integer>();
+		this.setTotalTerms(0);
 	}
 	
 	public String getLabel() {
@@ -82,6 +84,7 @@ public class TermCounter {
 		for (int i=0; i<array.length; i++) {
 			String term = array[i];
 			incrementTermCount(term);
+			totalTerms++;
 		}
 	}
 
@@ -149,5 +152,19 @@ public class TermCounter {
 		TermCounter counter = new TermCounter(url.toString());
 		counter.processElements(paragraphs);
 		counter.printCounts();
+	}
+
+	/**
+	 * @return the totalTerms
+	 */
+	public int getTotalTerms() {
+		return totalTerms;
+	}
+
+	/**
+	 * @param totalTerms the totalTerms to set
+	 */
+	public void setTotalTerms(int totalTerms) {
+		this.totalTerms = totalTerms;
 	}
 }

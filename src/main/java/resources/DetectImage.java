@@ -53,34 +53,44 @@ import com.google.common.collect.ImmutableList;
 
 
 @SuppressWarnings("serial")
-public class DetectLandmark {
+public class DetectImage {
   /**
    * Be sure to specify the name of your application. If the application name is {@code null} or
    * blank, the application will log a warning. Suggested format is "MyCompany-ProductName/1.0".
    */
-  private static final String APPLICATION_NAME = "Google-VisionDetectLandmark/1.0";
+  private static final String APPLICATION_NAME = "Google-VisionDetectImage/1.0";
 
   static final String CREDENTIAL_ENV_VAR = "GOOGLE_APPLICATION_CREDENTIALS";
   
   private static final int MAX_RESULTS = 4;
 
-  // [START run_application]
+  // [START run_application] unit testing
   /**
    * Annotates an image using the Vision API. Unit testing
    */
   public static void main(String[] args) throws IOException, GeneralSecurityException {
-	  if (args.length != 1) {
+	  if (args.length < 1) {
 	      System.err.println("Missing imagePath argument.");
 	      System.err.println("Usage:");
-	      System.err.printf("\tjava %s imagePath\n", DetectLandmark.class.getCanonicalName());
+	      System.err.printf("\tjava %s imagePath\n", DetectImage.class.getCanonicalName());
 	      System.exit(1);
 	    }
-	    Path imagePath = Paths.get(args[0]);
+	    Path imagePathLandmark = Paths.get(args[0]);
+	    Path imagePathLogo = Paths.get(args[1]);
 
-	    DetectLandmark app = new DetectLandmark(getVisionService());
-	    List<EntityAnnotation> landmarks = app.identifyLandmark(imagePath);
+	    DetectImage app = new DetectImage(getVisionService());
+	    
+	    //detect landmark
+	    List<EntityAnnotation> landmarks = app.identifyLandmark(imagePathLandmark);
 	    System.out.printf("Found %d landmark%s\n", landmarks.size(), landmarks.size() == 1 ? "" : "s");
 	    for (EntityAnnotation annotation : landmarks) {
+	      System.out.printf("\t%s\n", annotation.getDescription());
+	    }  
+	    
+	    //detect logo
+	    List<EntityAnnotation> logos = app.identifyLogo(imagePathLogo);
+	    System.out.printf("Found %d landmark%s\n", logos.size(), logos.size() == 1 ? "" : "s");
+	    for (EntityAnnotation annotation : logos) {
 	      System.out.printf("\t%s\n", annotation.getDescription());
 	    }  
 	    
@@ -111,7 +121,7 @@ public class DetectLandmark {
   /**
    * Constructs a {@link DetectLandmark} which connects to the Vision API.
    */
-  public DetectLandmark(Vision vision) {
+  public DetectImage(Vision vision) {
     this.vision = vision;
   }
 
@@ -140,16 +150,36 @@ public class DetectLandmark {
 	    BatchAnnotateImagesResponse batchResponse = annotate.execute();
 	    assert batchResponse.getResponses().size() == 1;
 	    AnnotateImageResponse response = batchResponse.getResponses().get(0);
-	    if (response.getLandmarkAnnotations() == null) {
-	      throw new IOException(
-	          response.getError() != null
-	              ? response.getError().getMessage()
-	              : "Unknown error getting image annotations");
-	    }
+
 	    return response.getLandmarkAnnotations();
-	  
-	  
-	 
+  }
+  
+  /**
+   * Gets up to {@code maxResults} logo for an image uploaded from jsp.
+   */
+  public List<EntityAnnotation> identifyLogo(MultipartFile imagefile) throws IOException {
+	  byte[] data = imagefile.getBytes();
+
+	    AnnotateImageRequest request =
+	        new AnnotateImageRequest()
+	            .setImage(new Image().encodeContent(data))
+	            .setFeatures(ImmutableList.of(
+	                new Feature()
+	                    .setType("LOGO_DETECTION")
+	                    .setMaxResults(MAX_RESULTS)));
+	    Vision.Images.Annotate annotate =
+	        vision.images()
+	            .annotate(new BatchAnnotateImagesRequest().setRequests(ImmutableList.of(request)));
+	    // Due to a bug: requests to Vision API containing large images fail when GZipped.
+	    // annotate.setDisableGZipContent(true);
+	    // [END construct_request]
+
+	    // [START parse_response]
+	    BatchAnnotateImagesResponse batchResponse = annotate.execute();
+	    assert batchResponse.getResponses().size() == 1;
+	    AnnotateImageResponse response = batchResponse.getResponses().get(0);
+
+	    return response.getLogoAnnotations(); 
   }
   
   
@@ -185,10 +215,7 @@ public class DetectLandmark {
 	              ? response.getError().getMessage()
 	              : "Unknown error getting image annotations");
 	    }
-	    return response.getLandmarkAnnotations();
-	  
-	  
-	 
+	    return response.getLandmarkAnnotations(); 
   }
   
   /**
@@ -218,6 +245,69 @@ public class DetectLandmark {
     }
     return response.getLandmarkAnnotations();
   }
+  
+  /**
+   * Gets up to {@code maxResults} logo for an image stored at local machine.
+   */
+  public List<EntityAnnotation> identifyLogo(Path path) throws IOException {
+	  byte[] data = Files.readAllBytes(path);
+
+	    AnnotateImageRequest request =
+	        new AnnotateImageRequest()
+	            .setImage(new Image().encodeContent(data))
+	            .setFeatures(ImmutableList.of(
+	                new Feature()
+	                    .setType("LOGO_DETECTION")
+	                    .setMaxResults(MAX_RESULTS)));
+	    Vision.Images.Annotate annotate =
+	        vision.images()
+	            .annotate(new BatchAnnotateImagesRequest().setRequests(ImmutableList.of(request)));
+	    // Due to a bug: requests to Vision API containing large images fail when GZipped.
+	    // annotate.setDisableGZipContent(true);
+	    // [END construct_request]
+
+	    // [START parse_response]
+	    BatchAnnotateImagesResponse batchResponse = annotate.execute();
+	    assert batchResponse.getResponses().size() == 1;
+	    AnnotateImageResponse response = batchResponse.getResponses().get(0);
+	    if (response.getLogoAnnotations() == null) {
+	      throw new IOException(
+	          response.getError() != null
+	              ? response.getError().getMessage()
+	              : "Unknown error getting image annotations");
+	    }
+	    return response.getLogoAnnotations();
+  }
+  
+  /**
+   * Gets up to {@code maxResults} logo for an image stored at {@code uri}.
+   */
+  public List<EntityAnnotation> identifyLogo(String uri, int maxResults) throws IOException {
+    AnnotateImageRequest request =
+        new AnnotateImageRequest()
+            .setImage(new Image().setSource(
+                new ImageSource().setGcsImageUri(uri)))
+            .setFeatures(ImmutableList.of(
+                new Feature()
+                    .setType("LOGO_DETECTION")
+                    .setMaxResults(maxResults)));
+    Vision.Images.Annotate annotate =
+        vision.images()
+            .annotate(new BatchAnnotateImagesRequest().setRequests(ImmutableList.of(request)));
+
+    BatchAnnotateImagesResponse batchResponse = annotate.execute();
+    assert batchResponse.getResponses().size() == 1;
+    AnnotateImageResponse response = batchResponse.getResponses().get(0);
+    if (response.getLogoAnnotations() == null) {
+      throw new IOException(
+          response.getError() != null
+              ? response.getError().getMessage()
+              : "Unknown error getting image annotations");
+    }
+    return response.getLogoAnnotations();
+  }
+  
+  
   
   
   // [END detect_gcs_object]

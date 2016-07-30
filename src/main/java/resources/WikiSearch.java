@@ -19,6 +19,9 @@ import redis.clients.jedis.Jedis;
  *
  */
 public class WikiSearch {
+	private static final double k1=1.5;
+	private static final double b=0.75;
+	
 	
 	// map from URLs that contain the term(s) to relevance score
 	private Map<String, Double> map;
@@ -146,20 +149,22 @@ public class WikiSearch {
 	}
 
 	
-	//Basic version of TF-IDF algorithm
+	//BM25 version of TF-IDF algorithm
 	
 	//Term Frequency function
-		//termCount: the number of times that term t occurs in document
-		private static double TF(int termCount){
-			return 1+Math.log10(termCount);
-		}
+	//termCount: the number of times that term t occurs in document
+	//avg: the average document length in the text collection 
+	//D: the length of the document D in words
+	private static double TF(int termCount,double avg,int D){
+		return (termCount*(k1+1))/(termCount+k1*(1-b+b*D/avg));
+	}
 
-		//Inverse Document Frequency function
-		//N: total number of documents in the corpus 
-		//d: number of documents where the term appears
-		private static double IDF(int N,int d){
-			return Math.log10(1.0+N*1.0/d);
-		}
+	//Inverse Document Frequency function
+	//N: total number of documents in the corpus 
+	//d: number of documents where the term appears
+	private static double IDF(int N,int d){
+		return Math.log10((N-d+0.5)/(d+0.5));
+	}
 	
 	/**
 	 * Performs a search and makes a WikiSearch object.
@@ -170,27 +175,29 @@ public class WikiSearch {
 	 * @return a url map associated with tf-idf relevance value; or null if search term is empty
 	 */
 	public static WikiSearch search(String term, JedisIndex index) {
+		//checking search term is not empty	
 		if(!term.equals("")){
 			String[] termArray=term.trim().split(" ");
-			
-			//checking search term is not empty	
 			Map<String,Double> map=new HashMap<>();
 			
 			//get total number of documents in the corpus 
 			int N=index.getN();
+			//get avg number of words in all documentsin the corpus 
+			double avg=index.getAvgWordsCount();
 			
 			//iterate through search term one by one and calculate tf-idf relevance	
 			for (int i = 0; i < termArray.length; i++) {
 				String t=termArray[i];
-				//get the mapping from urls to termCount for this particular term
+				//get the mapping from urls to termCount for this particular search term
 				Map<String, Integer> termMap = index.getCounts(t);
 				//get number of documents where the term appears
 				int d=index.getURLs(t).size();
 				
 				for(String url:termMap.keySet()){
 					int termCount=termMap.get(url);
+					int D=index.getWordsCount(url);
 					//calculate tf-idf relevance value
-					double relevance=TF(termCount)*IDF(N,d);
+					double relevance=TF(termCount,avg,D)*IDF(N,d);
 					
 					//add calculated relevance to the result map
 					if(map.containsKey(url)){
@@ -212,7 +219,7 @@ public class WikiSearch {
 	}
 
 	
-	
+	//unit testing
 	public static void main(String[] args) throws IOException {
 		
 		// make a JedisIndex
