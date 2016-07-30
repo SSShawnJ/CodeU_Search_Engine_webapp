@@ -1,1 +1,1 @@
-web: java -cp -jar target/dependency/jetty-runner.jar --port 8080 target/*.war
+web:    java -cp target/classes:target/dependency/* Main
