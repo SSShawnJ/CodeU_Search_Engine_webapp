@@ -179,10 +179,7 @@ public class DetectImage {
 	    assert batchResponse.getResponses().size() == 1;
 	    AnnotateImageResponse response = batchResponse.getResponses().get(0);
 
-	    return response.getLogoAnnotations();
-	  
-	  
-	 
+	    return response.getLogoAnnotations(); 
   }
   
   
@@ -218,10 +215,7 @@ public class DetectImage {
 	              ? response.getError().getMessage()
 	              : "Unknown error getting image annotations");
 	    }
-	    return response.getLandmarkAnnotations();
-	  
-	  
-	 
+	    return response.getLandmarkAnnotations(); 
   }
   
   /**
@@ -283,9 +277,6 @@ public class DetectImage {
 	              : "Unknown error getting image annotations");
 	    }
 	    return response.getLogoAnnotations();
-	  
-	  
-	 
   }
   
   /**

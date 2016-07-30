@@ -24,6 +24,7 @@ import resources.WikiSearch;
 public class IndexPageController {
 	
 	static Jedis jedis;
+	
 
 	//load home page UI
 	@RequestMapping(value = "/", method = RequestMethod.GET)

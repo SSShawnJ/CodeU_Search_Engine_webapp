@@ -149,7 +149,7 @@ public class WikiSearch {
 	}
 
 	
-	//Basic version of TF-IDF algorithm
+	//BM25 version of TF-IDF algorithm
 	
 	//Term Frequency function
 	//termCount: the number of times that term t occurs in document
