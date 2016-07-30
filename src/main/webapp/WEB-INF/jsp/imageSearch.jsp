@@ -38,7 +38,7 @@
 
 
 	<div class="container" align="center" style="margin-top: 15%">
-		<a href="http://localhost:8080/"> <img
+		<a href="/"> <img
 			src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
 			width="272" height="92" />
 		</a>
