@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 
 import resources.DetectImage;
+import resources.JedisIndex;
+import resources.WikiSearch;
 
 // This controller handles the request from /seachImage and /imageSearchResult
 
@@ -46,6 +49,35 @@ public class ImageSearchingController {
 	    	for (EntityAnnotation annotation : imageAnnotation) {
 	    		result.append(annotation.getDescription());
 	    	}  
+	    	
+	    	
+	    	//////search for pages that is relevant to this result////
+	    	
+	    	//connect to redis and set up jedis
+			JedisIndex index = new JedisIndex(IndexPageController.jedis);
+			
+			//search
+			WikiSearch searchResult=WikiSearch.search(result.toString(), index);
+			//build html elements and return to View
+			StringBuilder x=new StringBuilder();
+			
+			List<Entry<String,Double>> pages;
+			
+			//if the user's query is not empty
+			if(searchResult!=null){
+				pages=searchResult.sort();
+				for(Entry<String,Double> entry:pages){
+					String url=entry.getKey();
+					String title=url.substring(url.lastIndexOf('/')+1, url.length()).replace('_', ' ');
+					x.append("<a href="+'"'+url+'"'+"class="+'"'+"list-group-item"+'"'+" >"+
+				"<h4 class="+'"'+"list-group-item-heading"+'"'+" >"+title+"</h4>"+
+				"<p class="+'"'+"list-group-item-text"+'"'+" >"+url+"</p> " +
+				"<p class="+'"'+"list-group-item-text"+'"'+" >"+entry.getValue()+"</p> "+"</a>");
+				}
+			}
+			model.addAttribute("word", x.toString());
+			
+	    	
 	    }
 	    //result not found
 	    else{

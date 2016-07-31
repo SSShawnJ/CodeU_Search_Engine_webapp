@@ -33,23 +33,35 @@
 						<td colspan="2"><input
 							class="btn btn-lg btn-primary btn-block" type="submit"
 							value="Search" /></td>
-						<td colspan="2">
-							<input class="btn btn-lg btn-primary btn-block" type="button"  onclick="location.href='/searchImage'" value="Search Image" >	
+						<td colspan="2"><input
+							class="btn btn-lg btn-primary btn-block" type="button"
+							onclick="location.href='/searchImage'" value="Search Image">
 						</td>
 					</tr>
 				</table>
 			</form>
 
 		</div>
-		
-		<div align="left" style="padding:20px;margin:20px">
-		<table>
-		<tr>
-			<td class="list-group-item-heading" align="left">Search result:</td>
-			<td class="list-group-item-text" align="left">${annotation}</td>
-		</tr>
-	</table>
-	</div>
+
+		<div align="left" style="padding: 20px; margin: 20px">
+			<table>
+				<tr>
+					<td class="list-group-item-heading" align="left">Search
+						result:</td>
+					<td class="list-group-item-text" align="left">${annotation}</td>
+				</tr>
+			</table>
+		</div>
+
+		<div style="margin-left: 4%; margin-right: 5%; margin-top: 5%">
+			<div class="list-group">
+				<table>
+					<tr>
+						<td align="left">${word}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
 	</div>
 
 	<div align="right"

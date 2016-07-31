@@ -23,7 +23,7 @@ import resources.WikiSearch;
 @Controller
 public class IndexPageController {
 	
-	static Jedis jedis;
+	public static final Jedis jedis=new AnnotationConfigApplicationContext(SpringConfig.class).getBean(JedisPool.class).getResource();
 	
 
 	//load home page UI
@@ -40,12 +40,6 @@ public class IndexPageController {
 		
 		
 		//connect to redis and set up jedis
-		ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringConfig.class);
-		JedisPool pool = ctx.getBean(JedisPool.class);
-		jedis = pool.getResource();
-		
-
-		
 		JedisIndex index = new JedisIndex(jedis);
 		
 		//search
