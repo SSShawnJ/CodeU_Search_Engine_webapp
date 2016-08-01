@@ -1,7 +1,7 @@
 package resources;
 
 /**
- * Implement Okapi BM25 TF-IDF ranking algorithm
+ * Implement Okapi BM25+ TF-IDF ranking algorithm
  * 
  * @author Shawn
  *
@@ -12,7 +12,7 @@ public class TFIDF {
 	
 	
 	/**
-	 * Get the Okapi BM25 implementation of TF term frequency double value
+	 * Get the Okapi BM25+ implementation of TF term frequency double value
 	 * 
 	 * @param termCount: the number of times that term t occurs in document
 	 * @param avg: the average document length in the text collection 
@@ -20,12 +20,12 @@ public class TFIDF {
 	 * @return
 	 */
 	public static double TF(int termCount,double avg,int D){
-		return (termCount*(k1+1))/(termCount+k1*(1-b+b*D/avg));
+		return (termCount*(k1+1))/(termCount+k1*(1-b+b*D/avg))+1.0;
 	}
 		
 	
 	/**
-	 * Get the Okapi BM25 implementation of IDF inverse document frequency double value
+	 * Get the Okapi BM25+ implementation of IDF inverse document frequency double value
 	 * 
 	 * @param N: total number of documents in the corpus
 	 * @param d: number of documents where the term appears

@@ -151,7 +151,7 @@ public class WikiSearch {
 	
 	/**
 	 * Performs a search and makes a WikiSearch object.
-	 * Implements BM25 version of TF-IDF ranking algorithm 
+	 * Implements BM25+ version of TF-IDF ranking algorithm 
 	 * 
 	 * @param term
 	 * @param index
