@@ -104,8 +104,13 @@ public class WebCrawler {
 		JedisIndex index = new JedisIndex(jedis); 
 		String source = "https://en.wikipedia.org/wiki/Java_(programming_language)";
 		String urlStart = "https://en.wikipedia.org/wiki/";
-		String[] pages = {"Bread", "Google", "Great_Wall_of_China", "Big_Ben", 
-				"Eiffel_Tower", "Cheese", "Pie", "Pi", "Tf–idf"};
+		String[] pages = {"C_(programming_language)", "Tf–idf",
+				//"Programming_language", "Object-oriented_programming", 
+				"Computer_architecture",
+				"Great_Wall_of_China", "Big_Ben", 
+				"Wall",	"Mercedes-Benz",
+				"Bread", "Pie", "Pi"
+				};
 		
 		WebCrawler wc = new WebCrawler(source, index);
 		
