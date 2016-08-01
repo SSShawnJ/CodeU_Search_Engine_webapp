@@ -19,8 +19,7 @@ import redis.clients.jedis.Jedis;
  *
  */
 public class WikiSearch {
-	private static final double k1=1.5;
-	private static final double b=0.75;
+	
 	
 	
 	// map from URLs that contain the term(s) to relevance score
@@ -149,26 +148,10 @@ public class WikiSearch {
 	}
 
 	
-	//BM25 version of TF-IDF algorithm
-	
-	//Term Frequency function
-	//termCount: the number of times that term t occurs in document
-	//avg: the average document length in the text collection 
-	//D: the length of the document D in words
-	private static double TF(int termCount,double avg,int D){
-		return (termCount*(k1+1))/(termCount+k1*(1-b+b*D/avg));
-	}
-
-	//Inverse Document Frequency function
-	//N: total number of documents in the corpus 
-	//d: number of documents where the term appears
-	private static double IDF(int N,int d){
-		return Math.log10((N-d+0.5)/(d+0.5));
-	}
 	
 	/**
 	 * Performs a search and makes a WikiSearch object.
-	 * Implements TF-IDF ranking algorithm 
+	 * Implements BM25 version of TF-IDF ranking algorithm 
 	 * 
 	 * @param term
 	 * @param index
@@ -182,23 +165,26 @@ public class WikiSearch {
 			
 			//get total number of documents in the corpus 
 			int N=index.getN();
-			//get avg number of words in all documentsin the corpus 
+			//get avg number of words in all documentation the corpus 
 			double avg=index.getAvgWordsCount();
 			
 			//iterate through search term one by one and calculate tf-idf relevance	
 			for (int i = 0; i < termArray.length; i++) {
-				String t=termArray[i];
+				//make all key words to lower case
+				String t=termArray[i].trim().toLowerCase();
+
+				if(SpecialWords.isUnimportant(t) && termArray.length>1) continue;
 				//get the mapping from urls to termCount for this particular search term
 				Map<String, Integer> termMap = index.getCounts(t);
 				//get number of documents where the term appears
 				int d=index.getURLs(t).size();
 				
+				// for each url, calculate and increase/store the tf-idf relevance value 
 				for(String url:termMap.keySet()){
 					int termCount=termMap.get(url);
 					int D=index.getWordsCount(url);
 					//calculate tf-idf relevance value
-					double relevance=TF(termCount,avg,D)*IDF(N,d);
-					
+					double relevance=TFIDF.TF(termCount,avg,D)*TFIDF.IDF(N,d);
 					//add calculated relevance to the result map
 					if(map.containsKey(url)){
 						double newRelevance=map.get(url)+relevance;
