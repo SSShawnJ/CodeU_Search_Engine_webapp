@@ -43,6 +43,15 @@ public class WebCrawler {
 	public int queueSize() {
 		return queue.size();	
 	}
+	
+	/**
+	 * Adds url to the end of the queue.
+	 * 
+	 * @param url
+	 */
+	public void addUrl(String url) {
+		queue.offer(url);
+	}
 
 	/**
 	 * Gets a URL from the queue and indexes it.
@@ -53,8 +62,8 @@ public class WebCrawler {
 	 */
 	public void crawl() throws IOException {
 		if (queue.isEmpty()) {
-	            return;
-	        }
+            return;
+        }
 		
 		String url=queue.poll();
      	if(index.isIndexed(url)){
@@ -63,13 +72,10 @@ public class WebCrawler {
      	else{
      		Elements paragraphs=wf.fetchWikipedia(url);
      		index.indexPage(url,paragraphs);
-     		queueInternalLinks(paragraphs);
+     		//queueInternalLinks(paragraphs);
      		return;
      	}
-        
-        	
-        
-	}
+   	}
 	
 	/**
 	 * Parses paragraphs and adds internal links to the queue.
@@ -97,12 +103,20 @@ public class WebCrawler {
 		Jedis jedis = JedisMaker.make();
 		JedisIndex index = new JedisIndex(jedis); 
 		String source = "https://en.wikipedia.org/wiki/Java_(programming_language)";
+		String urlStart = "https://en.wikipedia.org/wiki/";
+		String[] pages = {"Bread", "Google", "Great_Wall_of_China", "Big_Ben", 
+				"Eiffel_Tower", "Cheese", "Pie", "Pi", "Tf–idf"};
+		
 		WebCrawler wc = new WebCrawler(source, index);
 		
 		// for testing purposes, load up the queue
-		Elements paragraphs = wf.fetchWikipedia(source);
-		wc.queueInternalLinks(paragraphs);
+		//Elements paragraphs = wf.fetchWikipedia(source);
+		//wc.queueInternalLinks(paragraphs);
 		
+		// add pages want to index
+		for (String page : pages) {
+			wc.addUrl(urlStart + page);
+		}
 		
 		// loop until we index a new page
 		
