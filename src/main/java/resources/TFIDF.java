@@ -1,5 +1,11 @@
 package resources;
 
+/**
+ * Implement Okapi BM25 TF-IDF ranking algorithm
+ * 
+ * @author Shawn
+ *
+ */
 public class TFIDF {
 	private static final double k1=1.5;
 	private static final double b=0.75;
