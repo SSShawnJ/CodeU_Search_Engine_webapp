@@ -3,12 +3,11 @@ package resources;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.Protocol;
 
 //Config redis in Spring MVC
 
@@ -19,7 +18,7 @@ public class SpringConfig {
     public JedisPool getJedisPool() {
         try {
             URI redisURI = new URI("redis://redistogo:46cb163bd7f8cc9d8eb3a84d8cb969f5@viperfish.redistogo.com:10957");
-            return new JedisPool(new JedisPoolConfig(),
+            return new JedisPool(new GenericObjectPoolConfig(),
                     redisURI.getHost(),
                     redisURI.getPort(),
                     600000,

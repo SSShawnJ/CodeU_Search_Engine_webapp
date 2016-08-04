@@ -84,8 +84,8 @@ public class TermCounter {
 		for (int i=0; i<array.length; i++) {
 			String term = array[i];
 			incrementTermCount(term);
-			totalTerms++;
 		}
+		totalTerms=size();
 	}
 
 	/**
