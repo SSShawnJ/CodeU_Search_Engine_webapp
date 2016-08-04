@@ -22,7 +22,7 @@ public class SpringConfig {
             return new JedisPool(new JedisPoolConfig(),
                     redisURI.getHost(),
                     redisURI.getPort(),
-                    60000,
+                    0,
                     redisURI.getUserInfo().split(":",2)[1]);
         } catch (URISyntaxException e) {
             throw new RuntimeException("Redis couldn't be configured from URL in REDISTOGO_URL env var:"+ 
