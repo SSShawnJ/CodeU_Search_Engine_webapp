@@ -90,13 +90,18 @@ public class TermCounter {
 		
 		for (int i=0; i<array.length; i++) {
 			String term = array[i];
+<<<<<<< HEAD
 			// dont index unimportant words
 			if (!unimportantWords.contains(term)) {
 				incrementTermCount(term);
 				totalTerms++;
 			}
 			
+=======
+			incrementTermCount(term);
+>>>>>>> 0f588138f89a9d5f4b6de0cf6d5feb72a82612b3
 		}
+		totalTerms=size();
 	}
 
 	/**

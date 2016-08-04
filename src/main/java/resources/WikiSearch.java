@@ -177,7 +177,7 @@ public class WikiSearch {
 				//get the mapping from urls to termCount for this particular search term
 				Map<String, Integer> termMap = index.getCounts(t);
 				//get number of documents where the term appears
-				int d=index.getURLs(t).size();
+				int d=index.getURLsCount(t);
 				
 				// for each url, calculate and increase/store the tf-idf relevance value 
 				for(String url:termMap.keySet()){
