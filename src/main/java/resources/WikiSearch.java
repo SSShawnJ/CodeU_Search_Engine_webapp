@@ -158,50 +158,32 @@ public class WikiSearch {
 	 * @return a url map associated with tf-idf relevance value; or null if search term is empty
 	 */
 	public static WikiSearch search(String term, JedisIndex index) {
-		//checking search term is not empty	
-		if(!term.equals("")){
-			String[] termArray=term.trim().split(" ");
+		    //make all key words to lower case
+			String t=term.trim().toLowerCase();
 			Map<String,Double> map=new HashMap<>();
 			
 			//get total number of documents in the corpus 
 			int N=index.getN();
 			//get avg number of words in all documentation the corpus 
 			double avg=index.getAvgWordsCount();
+			//if(SpecialWords.isUnimportant(t) && termArray.length>1) continue;
+			//get the mapping from urls to termCount for this particular search term
+			Map<String, Integer> termMap = index.getCounts(t);
+			//get number of documents where the term appears
+			int d=index.getURLsCount(t);
 			
-			//iterate through search term one by one and calculate tf-idf relevance	
-			for (int i = 0; i < termArray.length; i++) {
-				//make all key words to lower case
-				String t=termArray[i].trim().toLowerCase();
-
-				//if(SpecialWords.isUnimportant(t) && termArray.length>1) continue;
-				//get the mapping from urls to termCount for this particular search term
-				Map<String, Integer> termMap = index.getCounts(t);
-				//get number of documents where the term appears
-				int d=index.getURLsCount(t);
-				
-				// for each url, calculate and increase/store the tf-idf relevance value 
-				for(String url:termMap.keySet()){
-					int termCount=termMap.get(url);
-					int D=index.getWordsCount(url);
-					//calculate tf-idf relevance value
-					double relevance=TFIDF.TF(termCount,avg,D)*TFIDF.IDF(N,d);
-					//add calculated relevance to the result map
-					if(map.containsKey(url)){
-						double newRelevance=map.get(url)+relevance;
-						map.put(url, newRelevance);
-					}
-					else{
-						map.put(url, relevance);
-					}
-				}
-				
-			}	
+			// for each url, calculate and increase/store the tf-idf relevance value 
+			for(String url:termMap.keySet()){
+				int termCount=termMap.get(url);
+				int D=index.getWordsCount(url);
+				//calculate tf-idf relevance value
+				double relevance=TFIDF.TF(termCount,avg,D)*TFIDF.IDF(N,d);
+				//add calculated relevance to the result map
+				map.put(url, relevance);
+			}
+					
 			return new WikiSearch(map);
 		
-		}
-		//search term is empty,return null
-		else
-			return null;
 	}
 
 	
