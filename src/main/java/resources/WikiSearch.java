@@ -173,7 +173,7 @@ public class WikiSearch {
 				//make all key words to lower case
 				String t=termArray[i].trim().toLowerCase();
 
-				if(SpecialWords.isUnimportant(t) && termArray.length>1) continue;
+				//if(SpecialWords.isUnimportant(t) && termArray.length>1) continue;
 				//get the mapping from urls to termCount for this particular search term
 				Map<String, Integer> termMap = index.getCounts(t);
 				//get number of documents where the term appears
