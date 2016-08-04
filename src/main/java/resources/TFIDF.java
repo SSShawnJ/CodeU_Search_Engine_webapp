@@ -20,7 +20,7 @@ public class TFIDF {
 	 * @return
 	 */
 	public static double TF(int termCount,double avg,int D){
-		return (termCount*(k1+1))/(termCount+k1*(1-b+b*D/avg))+1.0;
+		return (termCount*(k1+1))/(termCount+k1*(1-b+b*D/avg));
 	}
 		
 	
