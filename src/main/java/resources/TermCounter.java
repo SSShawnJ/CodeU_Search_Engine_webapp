@@ -85,9 +85,6 @@ public class TermCounter {
 		// replace punctuation with spaces, convert to lower case, and split on whitespace
 		String[] array = text.replaceAll("\\pP", " ").toLowerCase().split("\\s+");
 		
-		// create unimportant words here so dont save it multiple times on redis
-		Set<String> unimportantWords = new HashSet<String>();
-		
 		for (int i=0; i<array.length; i++) {
 			String term = array[i];
 
