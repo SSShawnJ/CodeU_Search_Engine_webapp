@@ -115,6 +115,19 @@ public class JedisIndex {
 	}
 	
 	/**
+	 * Looks up a search term and returns a number of URLs associated with it.
+	 * 
+	 * @param term
+	 * @return Integer of number of URLs.
+	 */
+	public int getURLsCount(String term) {
+		Set<String> set = jedis.smembers(urlSetKey(term));
+		return set.size();
+	}
+	
+	
+	
+	/**
 	 * Looks up a url and returns total number of words in this url document.
 	 * 
 	 * @param url
