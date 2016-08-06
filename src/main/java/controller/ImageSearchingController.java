@@ -69,7 +69,7 @@ public class ImageSearchingController {
 			
 			//search web pages
 			String searchWord=result.toString();
-			WikiSearch searchResult=searchPages(searchWord,index);
+			WikiSearch searchResult=WikiSearch.searchPages(searchWord,index);
 			List<Entry<String,Double>> pages;
 			//if page searching result is found
 			if(searchResult!=null){
@@ -85,7 +85,6 @@ public class ImageSearchingController {
 			}
 			model.addAttribute("word", x.toString());
 			
-	    	
 	    }
 	    //image searching result is not found
 	    else{
@@ -104,25 +103,5 @@ public class ImageSearchingController {
 	      return "imageSearchResult";
 	}
 
-	/**
-	 * Search for pages associated with the key words.
-	 * 
-	 * @param term String of search key words
-	 * @param index JedisIndex object
-	 * @return WikiSearch class containing result web pages
-	 */
-	private static WikiSearch searchPages(String term,JedisIndex index){
-		String[] termArray=term.trim().split(" ");
-		WikiSearch searchResult=WikiSearch.search(termArray[0], index);
-		
-		//iterate through search term one by one and calculate tf-idf relevance	
-		int iterator=1;
-		while(iterator<termArray.length){
-			String t=termArray[iterator];
-			searchResult=searchResult.or(WikiSearch.search(t,index));
-			iterator++;
-		}
-		return searchResult;
-	}
 
 }
