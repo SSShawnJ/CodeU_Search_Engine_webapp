@@ -187,6 +187,50 @@ public class WikiSearch {
 	}
 
 	
+	/**
+	 * Search for pages associated with the key words.Also supports AND(Exact),OR,EXCLUDE query
+	 * 
+	 * @param term String of search key words
+	 * @param index JedisIndex object
+	 * @return WikiSearch class containing result web pages
+	 */
+	public static WikiSearch searchPages(String term,JedisIndex index){
+		//checking search key words are not empty	
+		if(!term.equals("")){
+			//search for key words one by one
+			String[] termArray=term.trim().split(" ");
+			WikiSearch searchResult=WikiSearch.search(termArray[0], index);
+			
+			//iterate through search term one by one and calculate tf-idf relevance	
+			int iterator=1;
+			while(iterator<termArray.length){
+				String t=termArray[iterator];
+				//subtract or exclude pages that contain a specific term
+				if(t.charAt(0)=='-'){
+					searchResult=searchResult.minus(WikiSearch.search(t.substring(1),index));
+				}
+				//include pages that contains either or all of the search term
+				else if(t.equals("|")){
+					searchResult=searchResult.or(WikiSearch.search(t.substring(1),index));
+				}
+				//include the pages that have this key words exactly
+				else if(t.charAt(0)=='"' && t.charAt(t.length()-1)=='"'){
+					searchResult=searchResult.and(WikiSearch.search(t.substring(1,t.length()-1),index));
+				}
+				//general case, add the tf_idf relevance together
+				else{
+					searchResult=searchResult.or(WikiSearch.search(t,index));
+				}
+				iterator++;
+			}	
+			return searchResult;
+		}
+		else{
+			return null;
+		}
+	}
+	
+	
 	//unit testing
 	public static void main(String[] args) throws IOException {
 		

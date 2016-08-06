@@ -23,9 +23,7 @@
 
 
 	<div class="container" align="center" style="margin-top: 15%">
-		<a href="/"> <img
-			src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
-			width="272" height="92" />
+		<a href="/"> <img src="/images/bread4.jpg"/>
 		</a>
 		<div style="margin-top: 3%">
 			<form method="POST" action="/search">
