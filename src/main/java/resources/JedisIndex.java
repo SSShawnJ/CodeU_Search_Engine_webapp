@@ -391,11 +391,11 @@ public class JedisIndex {
 		Jedis jedis = JedisMaker.make();
 		JedisIndex index = new JedisIndex(jedis);
 		
-//		index.deleteTermCounters();
-//		index.deleteURLSets();
-//		index.deletePageWordsCounters();
-//		index.deleteAllKeys();
-		loadIndex(index);
+		index.deleteTermCounters();
+		index.deleteURLSets();
+		index.deletePageWordsCounters();
+		index.deleteAllKeys();
+		//loadIndex(index);
 		
 		Map<String, Integer> map = index.getCounts("the");
 		for (Entry<String, Integer> entry: map.entrySet()) {

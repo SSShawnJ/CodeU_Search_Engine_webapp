@@ -2,9 +2,7 @@ package resources;
 
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
@@ -22,11 +20,17 @@ public class TermCounter {
 	private Map<String, Integer> map;
 	private String label;
 	private int totalTerms;
+	private Set<String> unimportantWords;
 	
 	public TermCounter(String label) {
 		this.label = label;
 		this.map = new HashMap<String, Integer>();
 		this.setTotalTerms(0);
+		unimportantWords = new HashSet<String>();
+		unimportantWords.addAll(Arrays.asList("the", "of", "to", "and", "a", 
+				"in", "is", "it", "you", "that", "she", "her", "he", "was", 
+				"for", "on", "are", "with", "as", "i", "his", "they", "be", 
+				"at", "one", "have", "this", "him"));
 	}
 	
 	public String getLabel() {
@@ -83,9 +87,13 @@ public class TermCounter {
 		
 		for (int i=0; i<array.length; i++) {
 			String term = array[i];
-			incrementTermCount(term);
+
+			// dont index unimportant words
+			if (!unimportantWords.contains(term)) {
+				incrementTermCount(term);
+				totalTerms++;
+			}
 		}
-		totalTerms=size();
 	}
 
 	/**
