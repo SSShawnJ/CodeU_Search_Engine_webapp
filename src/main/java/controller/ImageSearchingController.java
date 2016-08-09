@@ -88,7 +88,7 @@ public class ImageSearchingController {
 	    }
 	    //image searching result is not found
 	    else{
-	    	result.append("No result is found.");
+	    	result.append("<img src="+'"'+"/images/noresultstoast2.png"+'"'+" width=600,"+ " height=430 " +"/>");
 	    }
 	    
 	    //add result to web page
