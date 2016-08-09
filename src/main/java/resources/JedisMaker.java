@@ -19,8 +19,13 @@ public class JedisMaker {
 
 
 		URI uri;
+		String filename = "license/redis_url.txt";
+		
+		// get url from file
+		String url = JedisMaker.class.getClassLoader().getResource(filename).toString();
+		
 		try {
-			uri = new URI("redis://redistogo:46cb163bd7f8cc9d8eb3a84d8cb969f5@viperfish.redistogo.com:10957");
+			uri = new URI(url);
 
 		} catch (URISyntaxException e) {
 			System.out.println("It looks like this file does not contain a valid URI.");
