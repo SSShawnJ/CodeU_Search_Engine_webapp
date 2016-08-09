@@ -1,5 +1,9 @@
 package resources;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -15,9 +19,14 @@ import redis.clients.jedis.JedisPool;
 public class SpringConfig {
 
     @Bean
-    public JedisPool getJedisPool() {
+    public JedisPool getJedisPool() throws Exception {
         try {
-            URI redisURI = new URI("redis://redistogo:46cb163bd7f8cc9d8eb3a84d8cb969f5@viperfish.redistogo.com:10957");
+        	String filename = "license/redis_url.txt";
+    		
+    		BufferedReader br = new BufferedReader(new FileReader(filename));
+    		String url = br.readLine();
+    		
+            URI redisURI = new URI(url);
             return new JedisPool(new GenericObjectPoolConfig(),
                     redisURI.getHost(),
                     redisURI.getPort(),
@@ -26,7 +35,10 @@ public class SpringConfig {
         } catch (URISyntaxException e) {
             throw new RuntimeException("Redis couldn't be configured from URL in REDISTOGO_URL env var:"+ 
                                         System.getenv("REDISTOGO_URL"));
+        } catch (Exception e) {
+        	throw new Exception(e);
         }
+    
     }
 
 }
