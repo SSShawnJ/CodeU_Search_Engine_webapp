@@ -64,11 +64,11 @@
 					</tr>
 				</table>
 				
-			</form>
-			
-			
+			</form>		
 		</div>
 
+		<div class="copy" align="right">
+		&copy; Shawn Jin, CodeU Final Project</div>
 		
 	</div>
 
