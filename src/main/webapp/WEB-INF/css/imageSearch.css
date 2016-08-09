@@ -1,38 +1,6 @@
 @import url(http://fonts.googleapis.com/css?family=Cabin:400);
 
-body{ body :0% ;margin:0%;}
-.webdesigntuts-workshop {
-	background: #000000;
-	height: 100%;
-	position: absolute;
-	text-align: center;
-	width: 100%;
-}
 
- .webdesigntuts-workshop:before,
-.webdesigntuts-workshop:after {
-	content: ' ';
-	display: block;
-	height: 1px;
-	left: 50%;
-	margin: 0 0 0 -400px;
-	position: absolute;
-	width: 800px;
-}
-
-/*line*/
-/* .webdesigntuts-workshop:before {
-	background: #444;
-	background: linear-gradient(left, #151515, #444, #151515);
-	top:350px;
-}
-
-.webdesigntuts-workshop:after {
-	background: #000;
-	background: linear-gradient(left, #151515, #000, #151515);
-	top: 191px;
-}
- */
 .webdesigntuts-workshop form {
 	display: inline-block;
 	font-size: 0px;

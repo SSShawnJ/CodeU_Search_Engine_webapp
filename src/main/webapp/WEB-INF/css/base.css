@@ -1,0 +1,84 @@
+@CHARSET "UTF-8";
+
+@import url(http://fonts.googleapis.com/css?family=Cabin:400);
+
+body{ margin:0; background-color: black;}
+.webdesigntuts-workshop {
+	background-color: black;
+	height: 100%;
+	position: relative;
+	text-align: center;
+	width: 100%;
+}
+
+ .webdesigntuts-workshop:before,
+.webdesigntuts-workshop:after {
+	content: ' ';
+	display: block;
+	height: 1px;
+	position: relative;
+	width: 800px;
+}
+
+
+
+#logo{
+	position:center;
+	 width:384px;
+	 height:240px;
+}
+
+@keyframes glow {
+	0% {
+		border-color: #393;
+		box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #000;
+	}
+	100% {
+		border-color: #6f6;
+		box-shadow: 0 0 20px rgba(0,255,0,.6), inset 0 0 10px rgba(0,255,0,.4), 0 2px 0 #000;
+	} 
+}
+/* 	.ie .webdesigntuts-workshop input {
+	line-height: 40px;
+}
+ */
+.webdesigntuts-workshop input::-webkit-input-placeholder {
+	color: #888;
+}
+
+.webdesigntuts-workshop input:-moz-placeholder {
+	color: #888;
+}
+
+.webdesigntuts-workshop input:focus {
+	animation: glow 800ms ease-out infinite alternate;
+	background: #222922;
+	background: linear-gradient(#333933, #222922);
+	border-color: #393;
+	box-shadow: 0 0 5px rgba(0,255,0,.2), inset 0 0 5px rgba(0,255,0,.1), 0 2px 0 #000;
+	color: #efe;
+	outline: none;
+}
+
+.webdesigntuts-workshop input:focus::-webkit-input-placeholder {
+	color: #efe;
+}
+
+.webdesigntuts-workshop input:focus:-moz-placeholder {
+	color: #efe;
+}
+
+.webdesigntuts-workshop button:hover,
+.webdesigntuts-workshop button:focus {
+	background: #292929;
+	background: linear-gradient(#393939, #292929);
+	color: #5f5;
+	outline: none;
+}
+
+.webdesigntuts-workshop button:active {
+	background: #292929;
+	background: linear-gradient(#393939, #292929);
+	box-shadow: 0 1px 0 #000, inset 1px 0 1px #222;
+	top: 1px;
+}

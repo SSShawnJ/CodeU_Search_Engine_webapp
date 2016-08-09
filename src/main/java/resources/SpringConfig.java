@@ -25,7 +25,7 @@ public class SpringConfig {
     		
     		BufferedReader br = new BufferedReader(new FileReader(filename));
     		String url = br.readLine();
-    		
+    		br.close();
             URI redisURI = new URI(url);
             return new JedisPool(new GenericObjectPoolConfig(),
                     redisURI.getHost(),

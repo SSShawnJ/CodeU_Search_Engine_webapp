@@ -82,7 +82,7 @@ public class IndexPageController {
 	
 	
 	private static String suggestions(String word){
-		return "<img src="+'"'+"/images/noresultstoast.png"+'"'+" width=600,"+ " height=430 " +"/>";
+		return "<img src="+'"'+"/images/noresultstoast.png"+'"'+ "/>";           
 	}
 	
 	

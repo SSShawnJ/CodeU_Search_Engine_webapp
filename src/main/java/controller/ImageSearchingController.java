@@ -78,21 +78,23 @@ public class ImageSearchingController {
 					String url=entry.getKey();
 					String title=url.substring(url.lastIndexOf('/')+1, url.length()).replace('_', ' ');
 					x.append("<a href="+'"'+url+'"'+"class="+'"'+"list-group-item"+'"'+" >"+
-				"<h4 class="+'"'+"list-group-item-heading"+'"'+" >"+title+"</h4>"+
-				"<p class="+'"'+"list-group-item-text"+'"'+" >"+url+"</p> " +
-				"<p class="+'"'+"list-group-item-text"+'"'+" >"+entry.getValue()+"</p> "+"</a>");
+							"<h4 class="+'"'+"list-group-item-heading"+'"'+" >"+title+"</h4>"+
+							"<p class="+'"'+"list-group-item-text"+'"'+" >"+url+"</p> " +
+							"<p class="+'"'+"list-group-item-text"+'"'+" >"+entry.getValue()+"</p> "+"</a>");
 				}
 			}
+			model.addAttribute("annotation", "Search Result:"+result.toString());
 			model.addAttribute("word", x.toString());
 			
 	    }
 	    //image searching result is not found
 	    else{
 	    	result.append("<img src="+'"'+"/images/noresultstoast2.png"+'"'+" width=600,"+ " height=430 " +"/>");
+	    	model.addAttribute("annotation",result.toString());
 	    }
 	    
 	    //add result to web page
-		model.addAttribute("annotation", result.toString());
+		
 		return "imageSearchResult";
 		    
 	}

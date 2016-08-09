@@ -5,15 +5,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link href="<c:url value="/css/imageSearch.css" />" rel="stylesheet">
-
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+<link href="<c:url value="/css/imageSearch.css" />" rel="stylesheet">
+<link href="<c:url value="/css/base.css"/>" rel="stylesheet">
 
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-
-
-
 
 </head>
 <body>
@@ -35,9 +32,9 @@
 
 
 	<div class="webdesigntuts-workshop" align="center">
-		<div style="margin-top: 5%">
-		<a href="/"> <img
-			src="/images/bread.png" width="384" height="240" />
+		<div style="margin-top: 50px">
+		<a href="/"> <img id="logo"
+			src="/images/bread.png"/>
 		</a>
 		</div>
 		<div>
@@ -56,7 +53,7 @@
 					
 					<tr>
 						<td colspan="2">
-							<img id="blah" src="" alt="your image" width="384" height="240"/>
+							<img id="blah" src="" alt="your image" width="320px" height="240"/>
 						</td>
 					</tr>
 					
@@ -68,10 +65,11 @@
 				</table>
 				
 			</form>
+			
+			
 		</div>
 
-		<div class="copy" align="right">
-		&copy; Shawn Jin, CodeU Final Project</div>
+		
 	</div>
 
 	

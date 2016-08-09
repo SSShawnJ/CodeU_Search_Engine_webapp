@@ -1,4 +1,6 @@
+@CHARSET "UTF-8";
 @import url(http://fonts.googleapis.com/css?family=Cabin:400);
+
 
 
 .webdesigntuts-workshop form {
@@ -39,7 +41,7 @@
 	font-family: 'Cabin', helvetica, arial, sans-serif;
 	font-size: 15px;
 	font-weight: 400;
-	height: 20px;
+	height: 40px;
 	margin: 0;
 	padding: 5px 5px 5px 5px;
 	text-shadow: 0 -1px 0 #000;
@@ -68,25 +70,23 @@
 	text-shadow: 0 -1px 0 #000;
 	width: 80px;
 }
-.webdesigntuts-workshop button:hover,
-.webdesigntuts-workshop button:focus {
-	background: #292929;
-	background: linear-gradient(#393939, #292929);
-	color: #5f5;
-	outline: none;
-}
 
-.webdesigntuts-workshop button:active {
-	background: #292929;
-	background: linear-gradient(#393939, #292929);
-	box-shadow: 0 1px 0 #000, inset 1px 0 1px #222;
-	top: 1px;
-}
+
 
 .copy{
 	color:#493;
-	margin: 10% 100px 30px;
+	margin: 50px 100px 30px;
 }
 
+#notFound{
+	height:50%;
+	width: 50%;
+	align:center;
+	position:relative;
+}
 
+	
+}
 
+	
+}
