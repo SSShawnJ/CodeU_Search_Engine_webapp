@@ -1,5 +1,7 @@
 package resources;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -21,8 +23,8 @@ public class JedisMaker {
 		URI uri;
 		String filename = "license/redis_url.txt";
 		
-		// get url from file
-		String url = JedisMaker.class.getClassLoader().getResource(filename).toString();
+		BufferedReader br = new BufferedReader(new FileReader(filename));
+		String url = br.readLine();
 		
 		try {
 			uri = new URI(url);
