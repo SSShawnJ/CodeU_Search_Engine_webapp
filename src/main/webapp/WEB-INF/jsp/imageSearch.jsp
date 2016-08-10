@@ -68,7 +68,7 @@
 		</div>
 
 		<div class="copy" align="right">
-		&copy; Shawn Jin, CodeU Final Project</div>
+		&copy; Team 42, CodeU Final Project</div>
 		
 	</div>
 
