@@ -1,7 +1,26 @@
+# Bread Search
+
 Google CodeU Final Project
 
-This maven project uses Java, Spring Web Framework, Maven, and Redis database. You guys can use Spring Tool Suite or Eclipse(with maven plugin) as IDE and download Maven online in order to set up the environment for this project.
+## Discription
+Bread search is a web search engine that is coded in Java and uses Spring framework, Maven, Redis database and runs on Heroku server.
 
-Implement Okapi BM25+ tf-idf ranking algorithm in Advanced_tf-idf branch.
-Add a varaible to TermCounter in order to store the total words for each document.
-Add several APIs in JedisIndex to fulfill the demand from new ranking algorithm
+##Key feature
+- Landmark and logo image detection
+- Boolean logic queries ("" for AND, | for OR, - for EXCLUDE )
+- Implement Okapi BM25+ TF-IDF algorithm for better result ranking
+- Runs on Heroku server at https://breadsearch.herokuapp.com 
+
+##Run the application
+```
+https://breadsearch.herokuapp.com
+```
+
+##Softwares Used
+- Jedis
+- Java7
+- Spring MVC
+- Maven
+- HTML/CSS
+- Javascript
+ 
