@@ -17,7 +17,7 @@ https://breadsearch.herokuapp.com
 ```
 
 ##Softwares Used
-- Jedis
+- Redis & Jedis
 - Java7
 - Spring MVC
 - Maven
