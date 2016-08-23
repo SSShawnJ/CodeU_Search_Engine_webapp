@@ -79,8 +79,7 @@ public class ImageSearchingController {
 					String title=url.substring(url.lastIndexOf('/')+1, url.length()).replace('_', ' ');
 					x.append("<a href="+'"'+url+'"'+"class="+'"'+"list-group-item"+'"'+" >"+
 							"<h4 class="+'"'+"list-group-item-heading"+'"'+" >"+title+"</h4>"+
-							"<p class="+'"'+"list-group-item-text"+'"'+" >"+url+"</p> " +
-							"<p class="+'"'+"list-group-item-text"+'"'+" >"+entry.getValue()+"</p> "+"</a>");
+							"<p class="+'"'+"list-group-item-text"+'"'+" >"+url+"</p> "+"</a>");
 				}
 			}
 			model.addAttribute("annotation", "Search Result:"+result.toString());
